@@ -20,6 +20,7 @@ var stats = document.querySelector('#stats-section');
 var gameOverBox = document.querySelector('#game-over-section');
 var gameOverGuessCount = document.querySelector('#game-over-guesses-count');
 var gameOverGuessGrammar = document.querySelector('#game-over-guesses-plural');
+let gameOverMessage = document.querySelector('#game-over-message')
 
 // Network Requests
 
@@ -31,16 +32,10 @@ getWords()
   .then(response => response.json())
   .then(data => {
     words = data
-    console.log(words)
     setGame()
   })
   .catch(error => console.log('Error:', error))
   
-// Event Listeners
-
-// window.addEventListener('load', function () {
-//   setGame()
-// });
 
 for (var i = 0; i < inputs.length; i++) {
   inputs[i].addEventListener('keyup', function() { moveToNextInput(event) });
@@ -112,6 +107,9 @@ function submitGuess() {
     compareGuess();
     if (checkForWin()) {
       setTimeout(declareWinner, 1000);
+    } 
+    else if (!checkForWin() && currentRow === 6) {
+      declareLoser()
     } else {
       changeRow();
     }
@@ -191,8 +189,19 @@ function declareWinner() {
   setTimeout(startNewGame, 4000);
 }
 
+function declareLoser() {
+  recordGameStats()
+  gameOverMessage.innerText = 'Game Over!'
+  viewGameOverMessage()
+  setTimeout(startNewGame(), 4000);
+}
+
 function recordGameStats() {
-  gamesPlayed.push({ solved: true, guesses: currentRow });
+  if (checkForWin()) {
+    gamesPlayed.push({ solved: true, guesses: currentRow })
+  } else {
+    gamesPlayed.push({solved: false, guesses: currentRow})
+  };
 }
 
 function changeGameOverText() {
