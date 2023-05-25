@@ -20,8 +20,8 @@ var stats = document.querySelector('#stats-section');
 var gameOverBox = document.querySelector('#game-over-section');
 var gameOverGuessCount = document.querySelector('#game-over-guesses-count');
 var gameOverGuessGrammar = document.querySelector('#game-over-guesses-plural');
-let gameOverMessage = document.querySelector('#game-over-message')
-let informationalText = document.querySelector('.informational-text')
+var gameOverMessage = document.querySelector('#game-over-message')
+let winLoseMessage = document.querySelector('.win-lose-message')
 
 // Network Requests
 
@@ -178,7 +178,7 @@ function updateKeyColor(letter, className) {
 }
 
 function checkForWin() {
-  return guess === winningWord;
+  return (guess === winningWord);
 }
 
 function changeRow() {
@@ -196,7 +196,7 @@ function declareWinner() {
 function declareLoser() {
   recordGameStats();
   changeGameOverText();
-  viewGameOverMessage();
+  viewGameOverMessage()
   setTimeout(startNewGame, 4000);
 }
 
@@ -209,11 +209,18 @@ function recordGameStats() {
 }
 
 function changeGameOverText() {
-  gameOverGuessCount.innerText = currentRow;
-  if (currentRow < 2) {
-    gameOverGuessGrammar.classList.add('collapsed');
-  } else {
-    gameOverGuessGrammar.classList.remove('collapsed');
+  console.log('guess:', guess, 'winning word:', winningWord)
+  console.log(currentRow)
+  if(checkForWin() && (currentRow < 2)) {
+    gameOverMessage.innerText = 'YAY'
+    winLoseMessage.innerText = 'It took you one guess to get the correct word!'
+  } else if (checkForWin() && currentRow > 1) {
+    gameOverMessage.innerText = 'YAY'
+    winLoseMessage.innerText = `It took you ${currentRow} guesses to get the correct word!`
+  }
+  else {
+    gameOverMessage.innerText = 'GAME OVER'
+    winLoseMessage.innerText = 'After 6 guesses you did not guess the correct word!'
   }
 }
 
