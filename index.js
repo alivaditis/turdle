@@ -209,11 +209,12 @@ function recordGameStats() {
 }
 
 function changeGameOverText() {
-  gameOverGuessCount.innerText = `${currentRow}`;
-  
-    informationalText.classList.add('hidden');
-    // gameOverMessage.innerText='WOO'
-
+  gameOverGuessCount.innerText = currentRow;
+  if (currentRow < 2) {
+    gameOverGuessGrammar.classList.add('collapsed');
+  } else {
+    gameOverGuessGrammar.classList.remove('collapsed');
+  }
 }
 
 function startNewGame() {
