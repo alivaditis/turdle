@@ -209,5 +209,5 @@ h3 {
 }
 
 .hidden {
-  display: none;
+  visibility: hidden;
 }
