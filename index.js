@@ -3,6 +3,7 @@ var winningWord = '';
 var currentRow = 1;
 var guess = '';
 var gamesPlayed = [];
+let words;
 
 // Query Selectors
 var inputs = document.querySelectorAll('input');
@@ -20,8 +21,26 @@ var gameOverBox = document.querySelector('#game-over-section');
 var gameOverGuessCount = document.querySelector('#game-over-guesses-count');
 var gameOverGuessGrammar = document.querySelector('#game-over-guesses-plural');
 
+// Network Requests
+
+async function getWords() {
+  return await fetch('http://localhost:3001/api/v1/words')
+} 
+
+getWords()
+  .then(response => response.json())
+  .then(data => {
+    words = data
+    console.log(words)
+    setGame()
+  })
+  .catch(error => console.log('Error:', error))
+  
 // Event Listeners
-window.addEventListener('load', setGame);
+
+// window.addEventListener('load', function () {
+//   setGame()
+// });
 
 for (var i = 0; i < inputs.length; i++) {
   inputs[i].addEventListener('keyup', function() { moveToNextInput(event) });
