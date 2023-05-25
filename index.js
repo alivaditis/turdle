@@ -20,6 +20,8 @@ var stats = document.querySelector('#stats-section');
 var gameOverBox = document.querySelector('#game-over-section');
 var gameOverGuessCount = document.querySelector('#game-over-guesses-count');
 var gameOverGuessGrammar = document.querySelector('#game-over-guesses-plural');
+var gameOverMessage = document.querySelector('#game-over-message')
+let winLoseMessage = document.querySelector('.win-lose-message')
 
 // Network Requests
 
@@ -31,16 +33,10 @@ getWords()
   .then(response => response.json())
   .then(data => {
     words = data
-    console.log(words)
     setGame()
   })
   .catch(error => console.log('Error:', error))
   
-// Event Listeners
-
-// window.addEventListener('load', function () {
-//   setGame()
-// });
 
 for (var i = 0; i < inputs.length; i++) {
   inputs[i].addEventListener('keyup', function() { moveToNextInput(event) });
@@ -87,7 +83,9 @@ function moveToNextInput(e) {
 
   if( key !== 8 && key !== 46 ) {
     var indexOfNext = parseInt(e.target.id.split('-')[2]) + 1;
-    inputs[indexOfNext].focus();
+    if(inputs[indexOfNext]) {
+      inputs[indexOfNext].focus();
+    }
   }
 }
 
@@ -112,8 +110,12 @@ function submitGuess() {
     compareGuess();
     if (checkForWin()) {
       setTimeout(declareWinner, 1000);
-    } else {
-      changeRow();
+    } 
+    else if (!checkForWin()  && (currentRow === 6)) {
+      setTimeout(declareLoser, 1000);
+    }
+    else {
+      changeRow()
     }
   } else {
     errorMessage.innerText = 'Not a valid word. Try again!';
@@ -176,7 +178,7 @@ function updateKeyColor(letter, className) {
 }
 
 function checkForWin() {
-  return guess === winningWord;
+  return (guess === winningWord);
 }
 
 function changeRow() {
@@ -191,16 +193,34 @@ function declareWinner() {
   setTimeout(startNewGame, 4000);
 }
 
+function declareLoser() {
+  recordGameStats();
+  changeGameOverText();
+  viewGameOverMessage()
+  setTimeout(startNewGame, 4000);
+}
+
 function recordGameStats() {
-  gamesPlayed.push({ solved: true, guesses: currentRow });
+  if (checkForWin()) {
+    gamesPlayed.push({ solved: true, guesses: currentRow })
+  } else {
+    gamesPlayed.push({solved: false, guesses: currentRow})
+  };
 }
 
 function changeGameOverText() {
-  gameOverGuessCount.innerText = currentRow;
-  if (currentRow < 2) {
-    gameOverGuessGrammar.classList.add('collapsed');
-  } else {
-    gameOverGuessGrammar.classList.remove('collapsed');
+  console.log('guess:', guess, 'winning word:', winningWord)
+  console.log(currentRow)
+  if(checkForWin() && (currentRow < 2)) {
+    gameOverMessage.innerText = 'YAY'
+    winLoseMessage.innerText = 'It took you one guess to get the correct word!'
+  } else if (checkForWin() && currentRow > 1) {
+    gameOverMessage.innerText = 'YAY'
+    winLoseMessage.innerText = `It took you ${currentRow} guesses to get the correct word!`
+  }
+  else {
+    gameOverMessage.innerText = 'GAME OVER'
+    winLoseMessage.innerText = 'After 6 guesses you did not guess the correct word!'
   }
 }
 
