@@ -21,6 +21,7 @@ var gameOverBox = document.querySelector('#game-over-section');
 var gameOverGuessCount = document.querySelector('#game-over-guesses-count');
 var gameOverGuessGrammar = document.querySelector('#game-over-guesses-plural');
 let gameOverMessage = document.querySelector('#game-over-message')
+let informationalText = document.querySelector('.informational-text')
 
 // Network Requests
 
@@ -110,10 +111,11 @@ function submitGuess() {
     if (checkForWin()) {
       setTimeout(declareWinner, 1000);
     } 
-    else if (!checkForWin() && currentRow === 6) {
-      declareLoser()
-    } else {
-      changeRow();
+    else if (!checkForWin()  && (currentRow === 6)) {
+      setTimeout(declareLoser, 1000);
+    }
+    else {
+      changeRow()
     }
   } else {
     errorMessage.innerText = 'Not a valid word. Try again!';
@@ -192,10 +194,10 @@ function declareWinner() {
 }
 
 function declareLoser() {
-  recordGameStats()
-  gameOverMessage.innerText = 'Game Over!'
-  viewGameOverMessage()
-  setTimeout(startNewGame(), 4000);
+  recordGameStats();
+  changeGameOverText();
+  viewGameOverMessage();
+  setTimeout(startNewGame, 4000);
 }
 
 function recordGameStats() {
@@ -207,12 +209,11 @@ function recordGameStats() {
 }
 
 function changeGameOverText() {
-  gameOverGuessCount.innerText = currentRow;
-  if (currentRow < 2) {
-    gameOverGuessGrammar.classList.add('collapsed');
-  } else {
-    gameOverGuessGrammar.classList.remove('collapsed');
-  }
+  gameOverGuessCount.innerText = `${currentRow}`;
+  
+    informationalText.classList.add('hidden');
+    // gameOverMessage.innerText='WOO'
+
 }
 
 function startNewGame() {

@@ -203,10 +203,11 @@ h3 {
 }
 
 /* HIDDEN ELEMENTS */
-.hidden {
-  visibility: hidden;
-}
 
 .collapsed {
+  display: none;
+}
+
+.hidden {
   display: none;
 }
