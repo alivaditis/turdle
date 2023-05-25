@@ -82,7 +82,9 @@ function moveToNextInput(e) {
 
   if( key !== 8 && key !== 46 ) {
     var indexOfNext = parseInt(e.target.id.split('-')[2]) + 1;
-    inputs[indexOfNext].focus();
+    if(inputs[indexOfNext]) {
+      inputs[indexOfNext].focus();
+    }
   }
 }
 
